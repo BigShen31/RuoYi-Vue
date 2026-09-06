@@ -43,6 +43,15 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+
+
+        <!-- H2 内存库（机试保底：启动参数 spring.profiles.active=h2） -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- 核心模块-->
         <dependency>
             <groupId>com.ruoyi</groupId>
