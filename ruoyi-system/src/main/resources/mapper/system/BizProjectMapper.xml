@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizProjectMapper">
+
+    <resultMap type="BizProject" id="BizProjectResult">
+        <id     property="projectId"     column="project_id"     />
+        <result property="projectName"   column="project_name"   />
+        <result property="projectCode"   column="project_code"   />
+        <result property="industryType"  column="industry_type"  />
+        <result property="investAmount"  column="invest_amount"  />
+        <result property="projectStatus" column="project_status" />
+        <result property="signDate"      column="sign_date"      />
+        <result property="landedDate"    column="landed_date"    />
+        <result property="contactName"   column="contact_name"   />
+        <result property="owner"         column="owner"          />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"        column="remark"         />
+    </resultMap>
+
+    <sql id="selectBizProjectVo">
+        select project_id, project_name, project_code, industry_type, invest_amount,
+               project_status, sign_date, landed_date, contact_name, owner,
+               create_by, create_time, update_by, update_time, remark
+        from biz_project
+    </sql>
+
+    <select id="selectBizProjectList" parameterType="BizProject" resultMap="BizProjectResult">
+        <include refid="selectBizProjectVo"/>
+        <where>
+            <if test="projectName != null and projectName != ''">
+                AND project_name like concat('%', #{projectName}, '%')
+            </if>
+            <if test="projectCode != null and projectCode != ''">
+                AND project_code like concat('%', #{projectCode}, '%')
+            </if>
+            <if test="industryType != null and industryType != ''">
+                AND industry_type = #{industryType}
+            </if>
+            <if test="projectStatus != null and projectStatus != ''">
+                AND project_status = #{projectStatus}
+            </if>
+        </where>
+        order by project_id desc
+    </select>
+
+    <select id="selectBizProjectByProjectId" parameterType="Long" resultMap="BizProjectResult">
+        <include refid="selectBizProjectVo"/>
+        where project_id = #{projectId}
+    </select>
+
+    <select id="selectProjectStatistics" resultType="java.util.HashMap">
+        select project_status as status_key, count(1) as cnt
+        from biz_project
+        group by project_status
+    </select>
+
+    <insert id="insertBizProject" parameterType="BizProject" useGeneratedKeys="true" keyProperty="projectId">
+        insert into biz_project(
+            project_name, project_code, industry_type, invest_amount, project_status,
+            sign_date, landed_date, contact_name, owner, create_by, create_time, remark
+        ) values (
+            #{projectName}, #{projectCode}, #{industryType}, #{investAmount}, #{projectStatus},
+            #{signDate}, #{landedDate}, #{contactName}, #{owner}, #{createBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <update id="updateBizProject" parameterType="BizProject">
+        update biz_project
+        <set>
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="projectCode != null">project_code = #{projectCode},</if>
+            <if test="industryType != null">industry_type = #{industryType},</if>
+            <if test="investAmount != null">invest_amount = #{investAmount},</if>
+            <if test="projectStatus != null and projectStatus != ''">project_status = #{projectStatus},</if>
+            <if test="signDate != null">sign_date = #{signDate},</if>
+            <if test="landedDate != null">landed_date = #{landedDate},</if>
+            <if test="contactName != null">contact_name = #{contactName},</if>
+            <if test="owner != null">owner = #{owner},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where project_id = #{projectId}
+    </update>
+
+    <update id="updateBizProjectStatus" parameterType="BizProject">
+        update biz_project
+        <set>
+            project_status = #{projectStatus},
+            <if test="signDate != null">sign_date = #{signDate},</if>
+            <if test="landedDate != null">landed_date = #{landedDate},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where project_id = #{projectId}
+    </update>
+
+    <delete id="deleteBizProjectByProjectId" parameterType="Long">
+        delete from biz_project where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteBizProjectByProjectIds" parameterType="Long">
+        delete from biz_project where project_id in
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </delete>
+</mapper>
