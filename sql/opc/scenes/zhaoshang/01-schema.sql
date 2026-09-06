@@ -16,11 +16,13 @@ CREATE TABLE IF NOT EXISTS biz_project (
     contact_name   VARCHAR(50)           COMMENT '联系人',
     owner          VARCHAR(50)           COMMENT '招商负责人',
     remark         VARCHAR(500)          COMMENT '备注',
+    del_flag       CHAR(1)      NOT NULL DEFAULT '0' COMMENT '删除标志(0存在 2删除)',
     create_by      VARCHAR(64)           COMMENT '创建者',
     create_time    DATETIME              COMMENT '创建时间',
     update_by      VARCHAR(64)           COMMENT '更新者',
     update_time    DATETIME              COMMENT '更新时间',
     PRIMARY KEY (project_id),
     KEY idx_project_status (project_status),
-    KEY idx_project_name (project_name)
+    KEY idx_project_name (project_name),
+    KEY idx_del_flag (del_flag)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='招商项目库';

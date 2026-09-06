@@ -20,18 +20,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"      column="update_by"      />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"        column="remark"         />
+        <result property="delFlag"       column="del_flag"       />
     </resultMap>
 
     <sql id="selectBizProjectVo">
         select project_id, project_name, project_code, industry_type, invest_amount,
                project_status, sign_date, landed_date, contact_name, owner,
-               create_by, create_time, update_by, update_time, remark
+               create_by, create_time, update_by, update_time, remark, del_flag
         from biz_project
     </sql>
 
     <select id="selectBizProjectList" parameterType="BizProject" resultMap="BizProjectResult">
         <include refid="selectBizProjectVo"/>
         <where>
+            del_flag = '0'
             <if test="projectName != null and projectName != ''">
                 AND project_name like concat('%', #{projectName}, '%')
             </if>
@@ -50,12 +52,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectBizProjectByProjectId" parameterType="Long" resultMap="BizProjectResult">
         <include refid="selectBizProjectVo"/>
-        where project_id = #{projectId}
+        where project_id = #{projectId} and del_flag = '0'
     </select>
 
     <select id="selectProjectStatistics" resultType="java.util.HashMap">
         select project_status as status_key, count(1) as cnt
         from biz_project
+        where del_flag = '0'
         group by project_status
     </select>
 
@@ -85,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
             update_time = sysdate()
         </set>
-        where project_id = #{projectId}
+        where project_id = #{projectId} and del_flag = '0'
     </update>
 
     <update id="updateBizProjectStatus" parameterType="BizProject">
@@ -97,17 +100,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
             update_time = sysdate()
         </set>
-        where project_id = #{projectId}
+        where project_id = #{projectId} and del_flag = '0'
     </update>
 
-    <delete id="deleteBizProjectByProjectId" parameterType="Long">
-        delete from biz_project where project_id = #{projectId}
-    </delete>
+    <!-- 逻辑删除：仅置删除标志，保留数据 -->
+    <update id="deleteBizProjectByProjectId" parameterType="Long">
+        update biz_project
+        set del_flag = '2', update_time = sysdate()
+        where project_id = #{projectId} and del_flag = '0'
+    </update>
 
-    <delete id="deleteBizProjectByProjectIds" parameterType="Long">
-        delete from biz_project where project_id in
+    <update id="deleteBizProjectByProjectIds" parameterType="Long">
+        update biz_project
+        set del_flag = '2', update_time = sysdate()
+        where project_id in
         <foreach item="projectId" collection="array" open="(" separator="," close=")">
             #{projectId}
         </foreach>
-    </delete>
+        and del_flag = '0'
+    </update>
 </mapper>

@@ -234,6 +234,7 @@ CREATE TABLE IF NOT EXISTS biz_project (
     contact_name   VARCHAR(50),
     owner          VARCHAR(50),
     remark         VARCHAR(500),
+    del_flag       CHAR(1) NOT NULL DEFAULT '0',
     create_by      VARCHAR(64),
     create_time    TIMESTAMP,
     update_by      VARCHAR(64),

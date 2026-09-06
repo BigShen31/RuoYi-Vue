@@ -57,6 +57,9 @@ public class BizProject extends BaseEntity
     @Size(max = 50, message = "招商负责人长度不能超过50个字符")
     private String owner;
 
+    /** 删除标志(0存在 2删除) */
+    private String delFlag;
+
     public Long getProjectId()
     {
         return projectId;
@@ -155,5 +158,15 @@ public class BizProject extends BaseEntity
     public void setOwner(String owner)
     {
         this.owner = owner;
+    }
+
+    public String getDelFlag()
+    {
+        return delFlag;
+    }
+
+    public void setDelFlag(String delFlag)
+    {
+        this.delFlag = delFlag;
     }
 }
