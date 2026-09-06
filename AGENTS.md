@@ -38,5 +38,5 @@
 
 ## 六、标准符合性（后续所有改动强制）
 
-19. 后续所有改动必须符合市面标准 Java + Spring Boot + MyBatis + 前后端分离工程规范及若依生态惯例：真实业务表建模、Controller→Service→Mapper 严格分层、菜单/权限/字典走数据库、统一响应与异常、P3C 命名与项目既有风格；不以「通用万能表」「配置驱动绕过分层」等非常规方案替代标准业务开发。
-20. 新业务模块按若依代码生成器同构产物实现（domain/mapper/xml/service/controller + 建表/菜单/字典 SQL），保持可读、可评审、可答辩。
+19. 后续所有改动必须符合市面标准 Java + Spring Boot + MyBatis + 前后端分离工程规范及一林生态惯例：真实业务表建模、Controller→Service→Mapper 严格分层、菜单/权限/字典走数据库、统一响应与异常、P3C 命名与项目既有风格；不以「通用万能表」「配置驱动绕过分层」等非常规方案替代标准业务开发。
+20. 新业务模块按一林代码生成器同构产物实现（domain/mapper/xml/service/controller + 建表/菜单/字典 SQL），保持可读、可评审、可答辩。
